@@ -64,17 +64,30 @@ class HTMLReport(object):
         # py3 can use os.makedirs(dst, exist_ok=True), but py2 cannot
         if not os.path.exists(self._target_dir):
             os.makedirs(self._target_dir)
-            os.makedirs(os.path.join(self._target_dir, 'css'))
-            os.makedirs(os.path.join(self._target_dir, 'js'))
+            os.makedirs(os.path.join(self._target_dir, 'static'))
+            os.makedirs(os.path.join(self._target_dir, 'static/css'))
+            os.makedirs(os.path.join(self._target_dir, 'static/fonts'))
+            os.makedirs(os.path.join(self._target_dir, 'static/img'))
+            os.makedirs(os.path.join(self._target_dir, 'static/js'))
+            # os.makedirs(os.path.join(self._target_dir, 'js'))
 
-        sdir = os.path.dirname(os.path.abspath(__file__))
-        for file in ['index.html', 'simplehttpserver.py', 'start.bat', 'css/jquery-image-player-min.css',
-                    'css/player-icons-bg.png', 'css/player-icons-sprite.png', 'js/jquery-1.10.2.min.js',
-                    'js/jquery-ui.min.js', 'js/jquery-image-player-min.js', 'js/echarts.min.js',
-                    'js/papaparse.min.js', 'js/jqpaginator.min.js', 'logo.png']:
-            src = os.path.join(sdir, 'assets', file)
-            dst = os.path.join(self._target_dir, file)
-            shutil.copyfile(src, dst)
+        pdir = os.path.dirname(os.path.abspath(__file__))
+        sdir = os.path.join(pdir, 'assets')
+        list = os.listdir(sdir)
+        for file in list:
+            path = os.path.join(sdir, file)
+            if os.path.isfile(path):
+                src = os.path.join(sdir, 'assets', file)
+                dst = os.path.join(self._target_dir, file)
+                shutil.copyfile(src, dst)
+
+        # for file in ['index.html', 'simplehttpserver.py', 'start.bat', 'css/jquery-image-player-min.css',
+        #             'css/player-icons-bg.png', 'css/player-icons-sprite.png', 'js/jquery-1.10.2.min.js',
+        #             'js/jquery-ui.min.js', 'js/jquery-image-player-min.js', 'js/echarts.min.js',
+        #             'js/papaparse.min.js', 'js/jqpaginator.min.js', 'logo.png']:
+        #     src = os.path.join(sdir, 'assets', file)
+        #     dst = os.path.join(self._target_dir, file)
+        #     shutil.copyfile(src, dst)
 
     def _record_screenshot(self, pos=None):
         """
