@@ -64,22 +64,29 @@ class HTMLReport(object):
         # py3 can use os.makedirs(dst, exist_ok=True), but py2 cannot
         if not os.path.exists(self._target_dir):
             os.makedirs(self._target_dir)
-            os.makedirs(os.path.join(self._target_dir, 'static'))
-            os.makedirs(os.path.join(self._target_dir, 'static/css'))
-            os.makedirs(os.path.join(self._target_dir, 'static/fonts'))
-            os.makedirs(os.path.join(self._target_dir, 'static/img'))
-            os.makedirs(os.path.join(self._target_dir, 'static/js'))
+            # os.makedirs(os.path.join(self._target_dir, 'static'))
             # os.makedirs(os.path.join(self._target_dir, 'js'))
+            # os.makedirs(os.path.join(self._target_dir, 'static/css'))
+            # os.makedirs(os.path.join(self._target_dir, 'static/fonts'))
+            # os.makedirs(os.path.join(self._target_dir, 'static/img'))
+            # os.makedirs(os.path.join(self._target_dir, 'static/js'))
 
         pdir = os.path.dirname(os.path.abspath(__file__))
         sdir = os.path.join(pdir, 'assets')
+        self._gci(sdir, self._target_dir)
+
+    def _gci(self, sdir, tdir):
         list = os.listdir(sdir)
         for file in list:
             path = os.path.join(sdir, file)
-            if os.path.isfile(path):
-                src = os.path.join(sdir, 'assets', file)
-                dst = os.path.join(self._target_dir, file)
-                shutil.copyfile(src, dst)
+            if os.path.isdir(path):
+                os.makedirs(os.path.join(tdir, file))
+                self._gci(path, os.path.join(tdir, file))
+            elif os.path.isfile(path):
+                dst = os.path.join(tdir, file)
+                if "element-icons.6f0a763.ttf" in dst:
+                    print("dddd")
+                shutil.copyfile(path, dst)
 
         # for file in ['index.html', 'simplehttpserver.py', 'start.bat', 'css/jquery-image-player-min.css',
         #             'css/player-icons-bg.png', 'css/player-icons-sprite.png', 'js/jquery-1.10.2.min.js',
